@@ -38,3 +38,10 @@ export enum EventTypeEN {
   CANCELED = "CANCELED",
   ENDED = "ENDED",
 }
+
+export interface IUserData {
+  username: string;
+  email: string;
+  password: string;
+  isAdmin?: boolean;
+}

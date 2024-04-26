@@ -1,13 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { IUser } from "../utils/types";
 
-export const isAdmin = async (
-  req: Request & { currentUser: IUser },
-  res: Response,
-  next: NextFunction
-) => {
+export const isAdmin = async (req: any, res: Response, next: NextFunction) => {
+  const currentUser = req.currentUser;
   try {
-    if (req.currentUser.isAdmin) {
+    if (currentUser.isAdmin) {
       next();
     } else {
       return res.status(401).json({

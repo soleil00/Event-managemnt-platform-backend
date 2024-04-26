@@ -6,7 +6,7 @@ import User from "../models/User";
 export const generateUserToken = async (user: IUser): Promise<string> => {
   try {
     const token = sign({ userId: user._id }, env.jwt_secret, {
-      expiresIn: "5h",
+      expiresIn: "72h",
     });
     return token;
   } catch (error: any) {
@@ -26,6 +26,6 @@ export const verifyUserToken = async (token: string): Promise<IUser | null> => {
       "Error decoding or retrieving user from token:",
       error.message
     );
-    throw new Error("Failed to verify user token");
+    throw new Error(error.message);
   }
 };

@@ -11,9 +11,14 @@ export const isEventFound = async (
     const event = await Event.findById(id);
 
     if (!event) {
-      throw new Error("Event not found");
+      return res.status(404).json({
+        message: "Event not found",
+      });
     }
 
     next();
-  } catch (error) {}
+  } catch (error: any) {
+    console.error("Error fetching event by ID:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
 };

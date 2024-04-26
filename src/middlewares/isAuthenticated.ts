@@ -1,17 +1,23 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
+import { verifyUserToken } from "../utils/jwt";
 
 export const isAuthenticated = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {
-  const token =
-    req.headers.authorization && req.headers.authorization.split(" ")[1];
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(400).json({ error: "Soleil says token is missing 👎" });
+  }
   try {
-    if (!token) {
-      return res.status(403).json({
-        message: "No token provided",
-      });
+    const user = await verifyUserToken(token);
+    if (!user) {
+      return res.status(401).json({ error: "Invalid token or user not found" });
     }
-  } catch (error) {}
+    req.currentUser = user;
+    next();
+  } catch (error: any) {
+    return res.status(401).json({ error: error.message });
+  }
 };
