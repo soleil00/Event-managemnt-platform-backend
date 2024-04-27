@@ -1,10 +1,11 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { IBooking } from "../utils/types";
 
 const bookingSchema = new mongoose.Schema<IBooking>(
   {
     user: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     event: {

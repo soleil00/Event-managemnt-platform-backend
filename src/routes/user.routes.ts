@@ -10,6 +10,8 @@ import {
 import { isUserFound } from "../middlewares/isUserFound";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
 import { isAdmin } from "../middlewares/isAdmin";
+import { userExists } from "../middlewares/userExists";
+import { verifyToken } from "../middlewares/verifyToken";
 
 const userRoutes = Router();
 
@@ -17,7 +19,8 @@ userRoutes.get("/", isAuthenticated, isAdmin, getAllUsers);
 userRoutes.get("/:id", isUserFound, isAuthenticated, isAdmin, getSingleUser);
 userRoutes.put("/:id", isUserFound, isAuthenticated, isAdmin, updateUser);
 userRoutes.delete("/:id", isUserFound, isAuthenticated, isAdmin, deleterUser);
-userRoutes.post("/register", userRegistration);
+userRoutes.post("/register", userExists, userRegistration);
 userRoutes.post("/login", userAuthentication);
+userRoutes.post("/verify", verifyToken);
 
 export default userRoutes;

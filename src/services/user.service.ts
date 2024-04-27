@@ -23,7 +23,10 @@ export const registerNewUser = async (userData: IUserData): Promise<IUser> => {
 
 export const getUserById = async (id: string): Promise<IUser | null> => {
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate({
+      path: "bookings",
+      populate: { path: "event" },
+    });
     return user;
   } catch (error: any) {
     console.error("Error fetching user by ID:", error.message);
@@ -58,7 +61,7 @@ export const updateUserById = async (
 
 export const loginUser = async (email: string) => {
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email }).populate("bookings");
     return user;
   } catch (error: any) {
     console.error("Error fetching user by email:", error.message);

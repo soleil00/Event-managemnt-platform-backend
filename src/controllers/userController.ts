@@ -35,6 +35,7 @@ export const userRegistration = async (req: Request, res: Response) => {
       isAdmin,
     });
     res.status(201).json({
+      status: 201,
       message: "User created successfully",
       user: newUser,
     });
@@ -52,6 +53,7 @@ export const userAuthentication = async (req: Request, res: Response) => {
     const user = await userServices.loginUser(email);
     if (!user) {
       return res.status(404).json({
+        status: 404,
         message: "User not found",
       });
     }
@@ -59,11 +61,13 @@ export const userAuthentication = async (req: Request, res: Response) => {
     const isPasswordMatch = user.password === password;
     if (!isPasswordMatch) {
       return res.status(409).json({
+        status: 409,
         message: "invalid credentials",
       });
     } else {
       const token = await generateUserToken(user);
       return res.status(200).json({
+        status: 200,
         message: "Login successful",
         token,
         user,

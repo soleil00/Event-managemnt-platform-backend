@@ -1,24 +1,35 @@
 import { Request } from "express";
-import { IEvent } from "../utils/types";
+import { EventStatus, IEvent, IUser } from "../utils/types";
 import Event from "../models/Event";
+import Booking from "../models/Booking";
+import cloudinary from "../utils/cloudinary";
 
-export const getAllEvents = async (): Promise<IEvent[]> => {
+export const findAllEvents = async (): Promise<IEvent[]> => {
   try {
     const events = await Event.find();
     return events;
   } catch (error: any) {
     console.error("Error fetching events:", error.message);
-    throw new Error("Failed to fetch events");
+    throw new Error(error.message);
   }
 };
 
-export const createEvent = async (req: Request): Promise<IEvent> => {
+export const registerEvent = async (req: any): Promise<IEvent> => {
+  const tickets = parseInt(req.body.numTickets, 10);
+  const price = parseFloat(req.body.price);
+
   try {
-    const newEvent = await Event.create(req.body);
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const newEvent = await Event.create({
+      ...req.body,
+      price: price,
+      numTickets: tickets,
+      image: result.secure_url,
+    });
     return newEvent;
   } catch (error: any) {
     console.error("Error creating event:", error.message);
-    throw new Error("Failed to create event");
+    throw new Error(error.message);
   }
 };
 
@@ -28,7 +39,7 @@ export const getEventById = async (id: string): Promise<IEvent | null> => {
     return event;
   } catch (error: any) {
     console.error("Error fetching event by ID:", error.message);
-    throw new Error("Failed to fetch event");
+    throw new Error(error.message);
   }
 };
 
@@ -57,38 +68,73 @@ export const updateEventById = async (
   }
 };
 
-export const cancelEvent = async (id: string): Promise<boolean> => {
+export const markEventAsCanceled = async (
+  id: string,
+  currentUser: IUser
+): Promise<IEvent | null> => {
   try {
-    // Implement cancellation logic here
-    // Example: Set event status to 'CANCELED'
-    return true; // Placeholder for successful cancellation
+    const event = await Event.findByIdAndUpdate(
+      id,
+      { status: EventStatus.CANCELED },
+      { new: true }
+    );
+    return event;
   } catch (error: any) {
     console.error("Error cancelling event:", error.message);
-    throw new Error("Failed to cancel event");
+    throw new Error(error.model.message);
   }
 };
 
-export const bookEvent = async (
+export const cancel = async (
+  bookingId: string,
+  currentUser: IUser
+): Promise<boolean> => {
+  try {
+    const bookingIndex = currentUser.bookings.findIndex(
+      (booking: any) => booking === bookingId
+    );
+
+    if (bookingIndex === -1) {
+      throw new Error("Booking not found");
+    }
+    currentUser.bookings.splice(bookingIndex, 1);
+
+    await currentUser.save();
+    await Booking.findByIdAndDelete(bookingId);
+
+    return true;
+  } catch (error: any) {
+    console.error("Error cancelling booking:", error.message);
+    throw new Error(error.message);
+  }
+};
+export const book = async (
   id: string,
-  numTickets: number
+  numTickets: number,
+  currentUser: IUser
 ): Promise<boolean> => {
   try {
     const event = await Event.findById(id);
-
-    // if (!event) {
-    //   throw new Error("Event not found");
-    // }
 
     if (event!.numTickets < numTickets) {
       throw new Error("Not enough tickets available");
     }
 
+    const newBooking = await Booking.create({
+      user: currentUser._id,
+      event,
+      numTickets,
+    });
+
     event!.numTickets -= numTickets;
     await event!.save();
+
+    currentUser.bookings.push(newBooking._id);
+    await currentUser.save();
 
     return true;
   } catch (error: any) {
     console.error("Error booking event:", error.message);
-    throw new Error("Failed to book event");
+    throw new Error(error.message);
   }
 };

@@ -8,16 +8,17 @@ export interface IEvent extends Document {
   image: string;
   description: string;
   numTickets: number;
+  term?: string;
   price: number;
   createdAt?: Date;
   updatedAt?: Date;
   status: "ACTIVE" | "CANCELED" | "ENDED";
-  type: Types.ObjectId;
+  type: string;
 }
 
 export interface IBooking extends Document {
-  user: string;
-  event: Types.ObjectId | Event;
+  user: Types.ObjectId;
+  event: Types.ObjectId;
   numTickets: number;
   createdAt?: Date;
   updatedAt?: Date;
@@ -33,7 +34,7 @@ export interface IUser extends Document {
   updatedAt?: Date;
 }
 
-export enum EventTypeEN {
+export enum EventStatus {
   ACTIVE = "ACTIVE",
   CANCELED = "CANCELED",
   ENDED = "ENDED",

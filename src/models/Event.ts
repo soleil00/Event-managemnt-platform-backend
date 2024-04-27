@@ -10,6 +10,7 @@ const eventSchema = new mongoose.Schema<IEvent>(
     date: {
       type: Date,
       required: true,
+      default: Date.now,
     },
     location: {
       type: String,
@@ -31,14 +32,16 @@ const eventSchema = new mongoose.Schema<IEvent>(
       type: Number,
       required: true,
     },
+    term: {
+      type: String,
+    },
     status: {
       type: String,
       enum: ["ACTIVE", "CANCELED", "ENDED"],
       default: "ACTIVE",
     },
     type: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "EventType",
+      type: String,
       required: true,
     },
   },
