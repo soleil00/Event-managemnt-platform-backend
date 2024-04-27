@@ -4,7 +4,8 @@
   "description": "event booking platform backend",
   "main": "index.ts",
   "scripts": {
-    "dev": "nodemon index.ts"
+    "dev": "nodemon index.ts",
+    "build": "tsc"
   },
   "author": "soleil00",
   "license": "MIT",
