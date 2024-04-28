@@ -11,6 +11,7 @@ export const isAuthenticated = async (
     return res.status(400).json({ error: "Soleil says token is missing 👎" });
   }
   try {
+    console.log("from tokn ---> ", token);
     const user = await verifyUserToken(token);
     if (!user) {
       return res.status(401).json({ error: "Invalid token or user not found" });

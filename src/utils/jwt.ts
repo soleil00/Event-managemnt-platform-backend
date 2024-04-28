@@ -3,9 +3,9 @@ import { IUser } from "./types";
 import { env } from "./env";
 import User from "../models/User";
 
-export const generateUserToken = async (user: IUser): Promise<string> => {
+export const generateUserToken = async (id: string): Promise<string> => {
   try {
-    const token = sign({ userId: user._id }, env.jwt_secret, {
+    const token = sign({ userId: id }, env.jwt_secret, {
       expiresIn: "72h",
     });
     return token;
@@ -17,8 +17,9 @@ export const generateUserToken = async (user: IUser): Promise<string> => {
 
 export const verifyUserToken = async (token: string): Promise<IUser | null> => {
   try {
-    const decoded = verify(token, env.jwt_secret) as { userId: string };
+    const decoded = verify(token, env.jwt_secret);
 
+    //@ts-ignore
     const user = await User.findById(decoded.userId);
     return user;
   } catch (error: any) {

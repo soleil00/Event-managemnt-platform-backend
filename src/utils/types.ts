@@ -9,7 +9,9 @@ export interface IEvent extends Document {
   description: string;
   numTickets: number;
   term?: string;
-  price: number;
+  isPaid: boolean;
+  category: string;
+  price?: number;
   createdAt?: Date;
   updatedAt?: Date;
   status: "ACTIVE" | "CANCELED" | "ENDED";

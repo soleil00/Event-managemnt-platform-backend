@@ -3,6 +3,7 @@ import {
   deleterUser,
   getAllUsers,
   getSingleUser,
+  getUserBookings,
   updateUser,
   userAuthentication,
   userRegistration,
@@ -17,6 +18,7 @@ const userRoutes = Router();
 
 userRoutes.get("/", isAuthenticated, isAdmin, getAllUsers);
 userRoutes.get("/:id", isUserFound, isAuthenticated, isAdmin, getSingleUser);
+userRoutes.get("/:id/books", isUserFound, getUserBookings);
 userRoutes.put("/:id", isUserFound, isAuthenticated, isAdmin, updateUser);
 userRoutes.delete("/:id", isUserFound, isAuthenticated, isAdmin, deleterUser);
 userRoutes.post("/register", userExists, userRegistration);

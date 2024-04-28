@@ -1,3 +1,4 @@
+import Booking from "../models/Booking";
 import User from "../models/User";
 import { IUser, IUserData } from "../utils/types";
 
@@ -61,8 +62,9 @@ export const updateUserById = async (
 
 export const loginUser = async (email: string) => {
   try {
-    const user = await User.findOne({ email: email }).populate("bookings");
-    return user;
+    const user = await User.findOne({ email: email });
+    const bookings = await Booking.find({ user: user?._id }).populate("event");
+    return { user, bookings };
   } catch (error: any) {
     console.error("Error fetching user by email:", error.message);
     throw new Error(error.message);

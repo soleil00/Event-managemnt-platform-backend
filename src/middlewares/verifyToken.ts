@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyUserToken } from "../utils/jwt";
+import * as userServices from "../services/user.service";
 
 export const verifyToken = async (
   req: Request,
@@ -17,13 +18,17 @@ export const verifyToken = async (
 
   try {
     const decoded = await verifyUserToken(token);
+
     if (decoded !== null) {
       console.log(decoded);
+
+      const { user, bookings } = await userServices.loginUser(decoded.email);
       return res.status(200).json({
         status: 200,
         message: "Login successful check",
         token,
-        user: decoded,
+        user,
+        bookings,
       });
     } else {
       return res

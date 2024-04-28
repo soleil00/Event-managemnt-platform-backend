@@ -20,6 +20,9 @@ const eventSchema = new mongoose.Schema<IEvent>(
       type: String,
       required: true,
     },
+    category: {
+      type: String,
+    },
     description: {
       type: String,
       required: true,
@@ -27,6 +30,10 @@ const eventSchema = new mongoose.Schema<IEvent>(
     numTickets: {
       type: Number,
       required: true,
+    },
+    isPaid: {
+      type: Boolean,
+      default: false,
     },
     price: {
       type: Number,

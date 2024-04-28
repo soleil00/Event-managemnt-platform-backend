@@ -133,6 +133,12 @@ export const bookEvent = async (req: any, res: Response) => {
     const { numTickets } = req.body;
     const isBooked = await eventServices.book(id, numTickets, currentUser);
 
+    if (!currentUser) {
+      return res.status(200).json({
+        message: "missing current User in book event",
+      });
+    }
+
     if (isBooked) {
       return res.status(200).json({
         message: "Event booked successfully",
