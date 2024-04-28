@@ -9,7 +9,7 @@ const bookingSchema = new mongoose.Schema<IBooking>(
       required: true,
     },
     event: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Event",
       required: true,
     },

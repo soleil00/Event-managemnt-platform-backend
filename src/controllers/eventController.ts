@@ -107,24 +107,6 @@ export const cancelEvent = async (req: any, res: Response) => {
     });
   }
 };
-export const cancelBooking = async (req: any, res: Response) => {
-  const currentUser: IUser = req.currentUser;
-  const { id } = req.params;
-  try {
-    const isCancelled = await eventServices.cancel(id, currentUser);
-
-    if (isCancelled) {
-      return res.status(200).json({
-        message: "Booking cancelled successfully",
-      });
-    }
-  } catch (error: any) {
-    res.status(500).json({
-      message: "Internal server error",
-      error: error.message,
-    });
-  }
-};
 
 export const bookEvent = async (req: any, res: Response) => {
   const currentUser: IUser = req.currentUser;

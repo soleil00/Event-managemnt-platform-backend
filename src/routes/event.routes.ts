@@ -1,7 +1,6 @@
 import { Router } from "express";
 import {
   bookEvent,
-  cancelBooking,
   cancelEvent,
   createNewEvent,
   deleteSingleEvent,
@@ -29,7 +28,6 @@ eventRoutes.get("/:id", isEventFound, getSingleEvent);
 eventRoutes.delete("/:id", isAuthenticated, isAdmin, deleteSingleEvent);
 eventRoutes.put("/:id", isAuthenticated, isAdmin, updateSingleEvent);
 eventRoutes.put("/:id/cancel", isEventFound, cancelEvent);
-eventRoutes.post("/:id/cancel-booking", isEventFound, cancelBooking);
 eventRoutes.post("/:id/book", isAuthenticated, isEventFound, bookEvent);
 
 export default eventRoutes;
